@@ -1,0 +1,7 @@
+# The contents in this file specifies which dependencies are needed
+# to make the package run successfully.
+http.server
+PyYAML
+libpcap
+pydivert
+tox
