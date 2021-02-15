@@ -5,3 +5,7 @@ PyYAML
 libpcap
 pydivert
 tox
+hexdump
+scapy
+flask
+requests
