@@ -69,3 +69,7 @@ class WebServerHTTPRequestHandler(BaseHTTPRequestHandler):
         response.write(b'Received: ')
         response.write(post_data)
         self.wfile.write(response.getvalue())
+
+    def do_HEAD(self):
+        """ HEAD request handling. """
+        self._set_headers()
