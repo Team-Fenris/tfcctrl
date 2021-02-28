@@ -1,0 +1,15 @@
+api:
+  token: insert_api_token_here
+  destination_ip_addr: insert_dest_ip_to_logserver_here
+  destination_port: insert_dest_port_to_logserver_here
+
+defaults:
+  pdf_file_extension: pdf
+
+webserver:
+  default_port: 8080
+  default_hostname: localhost
+  default_mime_type: text/html
+  default_charset: utf-8
+  default_file_dir: defaults
+  default_file_name: index
