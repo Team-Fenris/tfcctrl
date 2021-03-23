@@ -17,6 +17,8 @@ modules/pcap.py
 * Restrict traffic (reinject traffic to network stack to localhost:port)
 * Reinject the packet into the network stack - localhost:80
 * @classmethod
+* Implement logging
+* Implement config class to read config.yaml
 
 modules/api.py
 ---------------
