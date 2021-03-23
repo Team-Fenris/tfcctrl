@@ -13,3 +13,16 @@ webserver:
   default_charset: utf-8
   default_file_dir: defaults
   default_file_name: index
+
+pcap:
+  print_pcap: True
+  print_payload: True
+  logging: True
+  pcap_file_ext: pcap
+  netflow_file_ext: log
+  no_error: 0
+  process_query_limited_information: 0x1000
+  af_inet: 2
+  tcp_table_owner_pid_all: 5
+  udp_table_owner_pid: 1
+  max_path: 260
