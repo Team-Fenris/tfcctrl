@@ -1,10 +1,11 @@
 from modules.webserver import WebServer
 from modules.config import *
 from modules.pcap import *
+from modules.dnsserver import *
 
 # Set hostname and port (not required)
-hostname = 'localhost'
-port = 8090
+hostname = '0.0.0.0'
+port = 80
 
 
 # Start of program
@@ -17,7 +18,11 @@ if __name__ == "__main__":
     # If not set hostname nor port, the server will be set up using default parameters defined in config.yaml
 #    webServer = WebServer(config, hostname, port)
 #    webServer = WebServer(hostname, port)
+#    webServer = WebServer()
 
+    # Start DNS server
+    dns_server = DNSServer()
+    
     # Capture Pcaps
-    pcap = Pcap()
-    pcap.capturePcap()
+#    pcap = Pcap()
+#    pcap.capturePcap()

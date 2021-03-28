@@ -8,3 +8,4 @@ hexdump
 scapy
 flask
 requests
+dnslib
