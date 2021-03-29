@@ -6,6 +6,6 @@ pydivert
 tox
 hexdump
 scapy
-flask
 requests
 dnslib
+config_with_yaml

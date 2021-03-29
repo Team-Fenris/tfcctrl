@@ -87,6 +87,7 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
 
                 print(f"DNS reply: {reply}\n")
                 print("------------------------------------------------------------------------------------------------------")
+
             return reply.pack()
         else:
             return None
@@ -103,6 +104,7 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
 
 class UDPRequestHandler(BaseRequestHandler):
     """ DNS server UDP request handler.
+
     :params: BaseRequestHandler:
     """
     def get_data(self):

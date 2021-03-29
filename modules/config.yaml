@@ -7,12 +7,14 @@ defaults:
   pdf_file_extension: pdf
 
 webserver:
-  default_port: 8080
+  default_port: 80
   default_hostname: localhost
   default_mime_type: text/html
   default_charset: utf-8
   default_file_dir: defaults
   default_file_name: index
+  threading: True
+  debug: True
 
 pcap:
   print_pcap: True
