@@ -18,3 +18,6 @@ This repository are mainly planned used in Windows.
 Therefore Linux is not needed, except in cases where you develop in Linux and modules needs to be installed to efficiently develop code.
 If you decide to use Linux with that reason (or some else reason), type `pip3 install -r requirements.txt` into the Linux terminal to install the required modules.
 
+
+## Configuration
+The Windows client must be set up with static IP address, and a DNS server pointing towards 127.0.0.1 for the local DNS server script to work.
