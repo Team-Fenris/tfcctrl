@@ -6,8 +6,12 @@ import ssl
 import threading
 import traceback
 
-# Set interrim debug variable (to be added into config.yaml later)
+# Set interrim variables
 debug = True
+param_threading = True
+param_sleeping = 100
+params_name = 'Threaded DNS server'
+
 
 class DNSServer:
     """ Base class for DNS server. """
@@ -28,13 +32,23 @@ class DNSServer:
             print(f"DNS Server: Port not set. Setting port to \"{port}\"")
 
         dns_server = socketserver.ThreadingUDPServer(('', port), UDPRequestHandler)
+        print("------------------------------------------------------------------------------------------------------")
+        if param_threading:
+            thread = threading.Thread(target=dns_server.serve_forever, name=params_name, daemon=True)
+            thread.start()
 
-        try:
-            dns_server.serve_forever()
-        except KeyboardInterrupt:
-            pass
+            if debug:
+                print(f"DNS Server: Debug detected. Sleeping for {param_sleeping} seconds before ending thread.")
+                print("------------------------------------------------------------------------------------------------------")
+                time.sleep(param_sleeping)
+        else:
+            try:
+                dns_server.serve_forever()
+            except KeyboardInterrupt:
+                pass
 
-        dns_server.server_close()
+            dns_server.server_close()
+
         print("Server stopped.")
 
 
@@ -66,18 +80,21 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
 
         # Check if the DNS record is a A-record
         if dns_record_type == "A":
+            # Create and return reply
+            reply = DNSRecord(DNSHeader(id=request.header.id, qr=1, aa=1, ra=1), q=request.q, a=RR(query_name,rdata=A("127.0.0.1")))
+
             if debug:
                 print(f"query_name: {query_name} | query_str: {query_str} | query_type: {query_type} | dns_record_type: {dns_record_type}\n")
 
-            # Create and return reply
-            reply = DNSRecord(DNSHeader(id=request.header.id, qr=1, aa=1, ra=1), q=request.q, a=RR(query_name,rdata=A("127.0.0.1")))
-            print(f"DNS reply: {reply}\n")
+                print(f"DNS reply: {reply}\n")
+                print("------------------------------------------------------------------------------------------------------")
+
             return reply.pack()
         else:
             return None
 
     def handle(self):
-        """ Handle for sending response. """
+        """ Do all work required to service a request. """
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
         print(f"{self.__class__.__name__[:3]} request {now} ({self.client_address[0]} {self.client_address[1]})")
         try:
