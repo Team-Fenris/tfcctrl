@@ -8,4 +8,4 @@ hexdump
 scapy
 requests
 dnslib
-config-with-yaml
+config_with_yaml

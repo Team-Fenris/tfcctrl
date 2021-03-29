@@ -12,7 +12,6 @@ param_threading = True
 param_sleeping = 100
 params_name = 'Threaded DNS server'
 
-
 class DNSServer:
     """ Base class for DNS server. """
     def __init__(self, hostname = None, port = None):

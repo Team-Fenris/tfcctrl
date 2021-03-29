@@ -12,8 +12,7 @@ if __name__ == "__main__":
 #    print(config.params)
 
     # Run the webserver on given hostname and port
-    # If not set hostname nor port, the server will be set up using default parameters defined in config.yaml
-#    webServer = WebServer()
+#    web_server = WebServer()
 
     # Start DNS server
 #    dns_server = DNSServer()
