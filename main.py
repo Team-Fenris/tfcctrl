@@ -12,7 +12,7 @@ port = 80
 if __name__ == "__main__":
 
     # Create config instance
-#    config = Config()
+    config = Config()
 #    print(config.params.getProperty("webserver")["default_port"])
 #    print(config.params)
 
@@ -23,8 +23,8 @@ if __name__ == "__main__":
 #    webServer = WebServer()
 
     # Start DNS server
-    dns_server = DNSServer()
-    
+#    dns_server = DNSServer()
+
     # Capture Pcaps
 #    pcap = Pcap()
 #    pcap.capturePcap()
