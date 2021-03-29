@@ -26,3 +26,9 @@ pcap:
   tcp_table_owner_pid_all: 5
   udp_table_owner_pid: 1
   max_path: 260
+
+dns:
+  default_listener_ip: 0.0.0.0
+  default_listener_port: 53
+  return_ip: 127.0.0.1
+  debug: True
