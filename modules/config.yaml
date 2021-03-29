@@ -32,3 +32,6 @@ dns:
   default_listener_port: 53
   return_ip: 127.0.0.1
   debug: True
+  threading: True
+  debug_sleep_period: 100
+  params_name: 'Threaded DNS server'
