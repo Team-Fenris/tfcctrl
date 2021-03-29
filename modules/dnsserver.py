@@ -30,9 +30,6 @@ class DNSServer:
         dns_server = socketserver.ThreadingUDPServer(('', port), UDPRequestHandler)
 
         try:
-#            thread = threading.Thread(target=dns_server.serve_forever)
-#            thread.daemon = True
-#            thread.start()
             dns_server.serve_forever()
         except KeyboardInterrupt:
             pass
@@ -73,7 +70,7 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
                 print(f"query_name: {query_name} | query_str: {query_str} | query_type: {query_type} | dns_record_type: {dns_record_type}\n")
 
             # Create and return reply
-            reply = DNSRecord(DNSHeader(id=request.header.id, qr=1, aa=1, ra=1), q=request.q, a=RR(query_name,rdata=A("127.0.0.1"))) # test
+            reply = DNSRecord(DNSHeader(id=request.header.id, qr=1, aa=1, ra=1), q=request.q, a=RR(query_name,rdata=A("127.0.0.1")))
             print(f"DNS reply: {reply}\n")
             return reply.pack()
         else:
@@ -91,6 +88,7 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
 
 class UDPRequestHandler(BaseRequestHandler):
     """ DNS server UDP request handler.
+
     :params: BaseRequestHandler:
     """
     def get_data(self):
