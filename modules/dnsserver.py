@@ -12,6 +12,7 @@ param_threading = True
 param_sleeping = 100
 params_name = 'Threaded DNS server'
 
+
 class DNSServer:
     """ Base class for DNS server. """
     def __init__(self, hostname = None, port = None):
@@ -87,6 +88,7 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
 
                 print(f"DNS reply: {reply}\n")
                 print("------------------------------------------------------------------------------------------------------")
+
             return reply.pack()
         else:
             return None
@@ -103,6 +105,7 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
 
 class UDPRequestHandler(BaseRequestHandler):
     """ DNS server UDP request handler.
+
     :params: BaseRequestHandler:
     """
     def get_data(self):
