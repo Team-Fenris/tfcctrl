@@ -8,7 +8,7 @@ import struct
 import time
 from hexdump import hexdump
 #import logging
-#from modules.config import Config as _Config
+from modules.config import Config
 
 from scapy.utils import PcapWriter as _PcapWriter
 from scapy.layers.inet import IP as _IP
@@ -16,13 +16,14 @@ from ctypes import *
 from ctypes.wintypes import *
 from socket import *
 
-NO_ERROR = 0
-PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
-AF_INET = 2
-TCP_TABLE_OWNER_PID_ALL = 5
-UDP_TABLE_OWNER_PID = 1
-MAX_PATH = 260
-PRINT_PAYLOAD = True
+# Interrim variables
+#NO_ERROR = 0
+#PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+#AF_INET = 2
+#TCP_TABLE_OWNER_PID_ALL = 5
+#UDP_TABLE_OWNER_PID = 1
+#MAX_PATH = 260
+#PRINT_PAYLOAD = True
 
 ####################################################################################################################################
 # Data headers/structures used to develop Management Information Base (MIB)
@@ -70,22 +71,23 @@ class Pcap(_MIB_TCPROW_OWNER_PID, _MIB_TCPTABLE_OWNER_PID, _MIB_UDPROW_OWNER_PID
     """ Base class for Pcap. 
     Class inheritance from MIB classes (_MIB_TCPROW_OWNER_PID, _MIB_TCPTABLE_OWNER_PID, _MIB_UDPROW_OWNER_PID, _MIB_UDPTABLE_OWNER_PID)
     """
-    def __init__(self, filename = 'log'):
+    def __init__(self, filename = 'asdf'):
         """ Instance constructor
         :params filename: default filename for output files (string)
         """
 
         # Get config parameters
         # Create config instance
-#        config = _Config('webserver')
-#        config_webserver = config.getConfigParameter('webserver')
-        self.pcap_filter = "ip and (inbound or outbound)"
+        config = Config()
+        self.config = config.params.getProperty("pcap")
+        self.pcap_filter = "ip and (inbound or outbound)" # TODO: FIX THIS
+#        self.pcap_filter = self.config["pcap_filter"]
 
         # Start Pydivert class
-        interrim_pcap_file_ext = ".pcap"
+        pcap_filename = filename + "." + self.config["pcap_file_ext"]
 #        interrim_netflow_file_ext = ".log"
-#        interrim_print_payload = True
-        self.pcap_file = self._PydivertClass(filename + interrim_pcap_file_ext, sync=True)
+#        self.pcap_file = self._PydivertClass(filename + interrim_pcap_file_ext, sync=True)
+        self.pcap_file = self._PydivertClass(pcap_filename, sync=True)
 #        self.netflow_file = filename + interrim_netflow_file_ext
 
     ####################################################################################################################################
@@ -106,18 +108,18 @@ class Pcap(_MIB_TCPROW_OWNER_PID, _MIB_TCPTABLE_OWNER_PID, _MIB_UDPROW_OWNER_PID
 
     # Get process name
     @staticmethod
-    def _getProcessName(pid):
+    def _getProcessName(pid, pqli, mp):
         """ Get the name of the executable file for the given process. """
         process_name = 'Unknown'
 
         if pid == 4:
             process_name = 'System'
         elif pid:
-            handle_process = windll.kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+            handle_process = windll.kernel32.OpenProcess(pqli, False, pid)
             if handle_process:
-                full_file_path_pointer = create_string_buffer(MAX_PATH)
+                full_file_path_pointer = create_string_buffer(mp)
 
-                if windll.psapi.GetProcessImageFileNameA(handle_process, full_file_path_pointer, MAX_PATH) > 0:
+                if windll.psapi.GetProcessImageFileNameA(handle_process, full_file_path_pointer, mp) > 0:
                     process_name = os.path.basename(full_file_path_pointer.value)
                 else:
                     print('Error: Failed to call GetProcessImageFileNameA')
@@ -149,7 +151,7 @@ class Pcap(_MIB_TCPROW_OWNER_PID, _MIB_TCPTABLE_OWNER_PID, _MIB_UDPROW_OWNER_PID
             dw_size = DWORD(sizeof(_MIB_TCPROW_OWNER_PID) * 512 + 4)
             tcp_table = _MIB_TCPTABLE_OWNER_PID()
 
-            if windll.iphlpapi.GetExtendedTcpTable(byref(tcp_table), byref(dw_size), False, AF_INET, TCP_TABLE_OWNER_PID_ALL, 0) != NO_ERROR:
+            if windll.iphlpapi.GetExtendedTcpTable(byref(tcp_table), byref(dw_size), False, self.config["af_inet"], self.config["tcp_table_owner_pid_all"], 0) != self.config["no_error"]:
                 print("Error: Failed to call GetExtendedTcpTable")
                 return
             
@@ -161,7 +163,7 @@ class Pcap(_MIB_TCPROW_OWNER_PID, _MIB_TCPTABLE_OWNER_PID, _MIB_UDPROW_OWNER_PID
             dw_size = DWORD(sizeof(_MIB_UDPROW_OWNER_PID) * 512 + 4)
             udp_table = _MIB_UDPTABLE_OWNER_PID()
 
-            if windll.iphlpapi.GetExtendedUdpTable(byref(udp_table), byref(dw_size), False, AF_INET, UDP_TABLE_OWNER_PID, 0) != NO_ERROR:
+            if windll.iphlpapi.GetExtendedUdpTable(byref(udp_table), byref(dw_size), False, self.config["af_inet"], self.config["udp_table_owner_pid"], 0) != self.config["no_error"]:
                 print("Error: Failed to call GetExtendedUdpTable")
 
             for item in udp_table.table[:udp_table.dwNumEntries]:
@@ -212,7 +214,7 @@ class Pcap(_MIB_TCPROW_OWNER_PID, _MIB_TCPTABLE_OWNER_PID, _MIB_UDPROW_OWNER_PID
 #            self.proto = self._getProto(packet)
 
             if self.pid:
-                self.process_name = self._getProcessName(self.pid).decode('utf-8')
+                self.process_name = self._getProcessName(self.pid, self.config["process_query_limited_information"], self.config["max_path"]).decode('utf-8')
 #            if self.pid:
 #                process_name = self._getProcessName(pid)
 
@@ -241,7 +243,7 @@ class Pcap(_MIB_TCPROW_OWNER_PID, _MIB_TCPTABLE_OWNER_PID, _MIB_UDPROW_OWNER_PID
 
 #                        print(f"[{self.pid}] [{self.process_name}] {self.proto} - {packet.src_addr}:{packet.src_port} -> {packet.dst_addr}:{packet.dst_port}")
 
-                        if PRINT_PAYLOAD:
+                        if self.config["print_payload"]:
                             print("Packet payload:")
                             hexdump(packet.payload)
 

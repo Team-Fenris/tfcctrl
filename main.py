@@ -8,14 +8,12 @@ if __name__ == "__main__":
 
     # Create config instance
     config = Config()
-#    print(config.params.getProperty("webserver")["default_port"])
-#    print(config.params)
 
-    # Run the webserver on given hostname and port
-#    web_server = WebServer()
+    # Hand over config parameters and start the HTTP server
+#    web_server = WebServer(config.params.getProperty("webserver"))
 
-    # Start DNS server
-#    dns_server = DNSServer()
+    # Hand over config parameters and start the DNS server
+#    dns_server = DNSServer(config.params.getProperty("dnsserver"))
     
     # Capture Pcaps
 #    pcap = Pcap()

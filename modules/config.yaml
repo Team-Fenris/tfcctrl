@@ -8,13 +8,15 @@ defaults:
 
 webserver:
   default_port: 80
-  default_hostname: localhost
+  default_hostname: 0.0.0.0
   default_mime_type: text/html
   default_charset: utf-8
   default_file_dir: defaults
   default_file_name: index
   threading: True
   debug: True
+  params_name: 'Threaded HTTP server'
+  sleep: 100
 
 pcap:
   print_pcap: True
@@ -28,12 +30,13 @@ pcap:
   tcp_table_owner_pid_all: 5
   udp_table_owner_pid: 1
   max_path: 260
+  pcap_filter: "ip and (inbound and outbound)"
 
-dns:
+dnsserver:
   default_listener_ip: 0.0.0.0
   default_listener_port: 53
   return_ip: 127.0.0.1
   debug: True
   threading: True
-  debug_sleep_period: 100
+  sleep: 100
   params_name: 'Threaded DNS server'
