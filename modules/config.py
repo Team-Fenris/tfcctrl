@@ -1,4 +1,4 @@
-import config_with_yaml as _config
+import config_with_yaml as config
 
 class Config:
     """ Base class for reading configuration parameters from config file. """
@@ -10,4 +10,4 @@ class Config:
         """
 
         # Read config parameters from config file
-        self.params = _config.load(filename)
+        self.params = config.load(filename)

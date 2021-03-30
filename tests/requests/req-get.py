@@ -1,7 +1,7 @@
 import requests
 
 # Set requests to be sent to the server
-get_req = { 'testkey': 'testvalue'}
+get_req = { 'testkey': 'testvalue' }
 
 # Request URL from the user input
 url = input("Insert URL: ")

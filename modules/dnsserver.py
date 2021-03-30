@@ -1,5 +1,6 @@
 import datetime
 from dnslib import *
+#from modules.config import Config
 import socketserver
 import socket
 import ssl
@@ -8,14 +9,13 @@ import traceback
 
 # Set interrim variables
 debug = True
-param_threading = True
-param_sleeping = 100
-params_name = 'Threaded DNS server'
 
 class DNSServer:
     """ Base class for DNS server. """
-    def __init__(self, hostname = None, port = None):
+    def __init__(self, config, hostname = None, port = None):
         """ Instance constructor
+
+        :params: config: Configuration parameters for the web server (yaml)
 
         :params: hostname: Hostname
     
@@ -23,23 +23,24 @@ class DNSServer:
         """
 
         if hostname is None:
-            hostname = "0.0.0.0"
+            hostname = config["default_listener_ip"]
             print(f"DNS Server: Hostname not set. Setting hostname to \"{hostname}\"")
 
         if port is None:
-            port = 53
+            port = config["default_listener_port"]
             print(f"DNS Server: Port not set. Setting port to \"{port}\"")
 
         dns_server = socketserver.ThreadingUDPServer(('', port), UDPRequestHandler)
         print("------------------------------------------------------------------------------------------------------")
-        if param_threading:
-            thread = threading.Thread(target=dns_server.serve_forever, name=params_name, daemon=True)
+        if config["threading"]:
+            thread = threading.Thread(target=dns_server.serve_forever, name=config["params_name"], daemon=True)
             thread.start()
 
-            if debug:
-                print(f"DNS Server: Debug detected. Sleeping for {param_sleeping} seconds before ending thread.")
+            if config["debug"]:
+                sleep_timer = config["sleep"]
+                print(f"DNS Server: Debug detected. Sleeping for {sleep_timer} seconds before ending thread.")
                 print("------------------------------------------------------------------------------------------------------")
-                time.sleep(param_sleeping)
+                time.sleep(sleep_timer)
         else:
             try:
                 dns_server.serve_forever()

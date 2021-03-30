@@ -4,3 +4,6 @@ This is a school project by [Ørjan Jacobsen](https://github.com/orjanj) ([Cyber
 
 ## What is this?
 This repo is used on a Windows machine to control traffic.
+
+## Installation guide
+See [here](docs/installation.md) for more information.
