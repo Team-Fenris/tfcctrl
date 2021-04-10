@@ -1,42 +1,34 @@
 api:
-  token: insert_api_token_here
-  destination_ip_addr: insert_dest_ip_to_logserver_here
-  destination_port: insert_dest_port_to_logserver_here
-
-defaults:
-  pdf_file_extension: pdf
-
-webserver:
-  default_port: 80
-  default_hostname: 0.0.0.0
-  default_mime_type: text/html
-  default_charset: utf-8
-  default_file_dir: defaults
-  default_file_name: index
-  threading: True
+  token: FsaGHWa312t19jgSG2qa2agsSG82gsnag383gSn2aSgn218Gxawg
   debug: True
-  params_name: 'Threaded HTTP server'
-  sleep: 100
+  api: False
+
+httpserver:
+  api_url: 'http://192.168.50.222:8000/api/http/'
+  listener_ip: 0.0.0.0
+  listener_port: 80
+  debug: False
+  api: False
+
+httpsserver:
+  api_url: 'http://192.168.50.222:8000/api/https/'
+  listener_ip: 0.0.0.0
+  listener_port: 443
+  debug: True
+  api: False
+  crt_file: 'localhost.pem'
 
 pcap:
+  api_url: 'http://192.168.50.222:8000/api/pcap/'
+  api: False
   print_pcap: True
   print_payload: True
-  logging: True
-  pcap_file_ext: pcap
-  netflow_file_ext: log
-  no_error: 0
-  process_query_limited_information: 0x1000
-  af_inet: 2
-  tcp_table_owner_pid_all: 5
-  udp_table_owner_pid: 1
-  max_path: 260
-  pcap_filter: "ip and (inbound and outbound)"
+  debug: True
 
 dnsserver:
-  default_listener_ip: 0.0.0.0
-  default_listener_port: 53
-  return_ip: 127.0.0.1
+  api_url: 'http://192.168.50.222:8000/api/dns/'
+  listener_ip: 0.0.0.0
+  listener_port: 53
+  return_ip: 192.168.50.64
   debug: True
-  threading: True
-  sleep: 100
-  params_name: 'Threaded DNS server'
+  api: False
