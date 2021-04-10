@@ -1,26 +1,26 @@
 api:
   token: FsaGHWa312t19jgSG2qa2agsSG82gsnag383gSn2aSgn218Gxawg
   debug: True
-  api: False
+  api: True
 
 httpserver:
   api_url: 'http://192.168.50.222:8000/api/http/'
   listener_ip: 0.0.0.0
   listener_port: 80
-  debug: False
-  api: False
+  debug: True
+  api: True
 
 httpsserver:
   api_url: 'http://192.168.50.222:8000/api/https/'
   listener_ip: 0.0.0.0
   listener_port: 443
   debug: True
-  api: False
+  api: True
   crt_file: 'localhost.pem'
 
 pcap:
   api_url: 'http://192.168.50.222:8000/api/pcap/'
-  api: False
+  api: True
   print_pcap: True
   print_payload: True
   debug: True
@@ -31,4 +31,4 @@ dnsserver:
   listener_port: 53
   return_ip: 192.168.50.64
   debug: True
-  api: False
+  api: True
