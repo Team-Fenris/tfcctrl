@@ -1,56 +1,45 @@
 import datetime
 from dnslib import *
-#from modules.config import Config
+from modules.config import Config
+from modules.api import FenrisApi
 import socketserver
 import socket
 import ssl
 import threading
 import traceback
 
-# Set interrim variables
-debug = True
+# Constants
+CONFIG=Config()
+API_URL=CONFIG.params.getProperty("dnsserver")["api_url"]
+CFG_PARAM=CONFIG.params.getProperty("dnsserver")
+API=FenrisApi()
 
-class DNSServer:
+class FenrisDNSServer:
     """ Base class for DNS server. """
-    def __init__(self, config, hostname = None, port = None):
+    def __init__(self, listener_ip = None, port = None):
         """ Instance constructor
 
-        :params: config: Configuration parameters for the web server (yaml)
+        :params: config: Configuration parameters (yaml)
 
-        :params: hostname: Hostname
+        :params: listener_ip: Listener IP address (string)
     
-        :params: port: Port
+        :params: port: Listener port (int)
         """
+        self.listener_ip = listener_ip
+        self.port = port
+        if self.listener_ip is None:
+            self.listener_ip = CFG_PARAM["listener_ip"]
+#            print(f"DNS Server: Listener IP not set. Setting listener IP to \"{self.listener_ip}\"")
 
-        if hostname is None:
-            hostname = config["default_listener_ip"]
-            print(f"DNS Server: Hostname not set. Setting hostname to \"{hostname}\"")
+        if self.port is None:
+            self.port = CFG_PARAM["listener_port"]
+#            print(f"DNS Server: Port not set. Setting port to \"{self.port}\"")       
 
-        if port is None:
-            port = config["default_listener_port"]
-            print(f"DNS Server: Port not set. Setting port to \"{port}\"")
-
-        dns_server = socketserver.ThreadingUDPServer(('', port), UDPRequestHandler)
-        print("------------------------------------------------------------------------------------------------------")
-        if config["threading"]:
-            thread = threading.Thread(target=dns_server.serve_forever, name=config["params_name"], daemon=True)
-            thread.start()
-
-            if config["debug"]:
-                sleep_timer = config["sleep"]
-                print(f"DNS Server: Debug detected. Sleeping for {sleep_timer} seconds before ending thread.")
-                print("------------------------------------------------------------------------------------------------------")
-                time.sleep(sleep_timer)
-        else:
-            try:
-                dns_server.serve_forever()
-            except KeyboardInterrupt:
-                pass
-
-            dns_server.server_close()
-
-        print("Server stopped.")
-
+    def start(self):
+        print(f"FenrisDNSServer: Starting DNS server on {self.listener_ip}:{self.port}")
+        self.dnsd = socketserver.ThreadingUDPServer(('', self.port), UDPRequestHandler)
+        self.thread = threading.Thread(target=self.dnsd.serve_forever, daemon=True)
+        self.thread.start()
 
 class BaseRequestHandler(socketserver.BaseRequestHandler):
     """ DNS server base request handler.
@@ -66,7 +55,7 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
         raise NotImplementedError
 
     @staticmethod
-    def response(data):
+    def response(data, api_data = None):
         """ Send response reply. """
 
         # Parse the DNS request and set reply
@@ -81,12 +70,26 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
         # Check if the DNS record is a A-record
         if dns_record_type == "A":
             # Create and return reply
-            reply = DNSRecord(DNSHeader(id=request.header.id, qr=1, aa=1, ra=1), q=request.q, a=RR(query_name,rdata=A("127.0.0.1")))
+            reply = DNSRecord(DNSHeader(id=request.header.id, qr=1, aa=1, ra=1), q=request.q, a=RR(query_name,rdata=A(CFG_PARAM["return_ip"])))
 
-            if debug:
+            if CFG_PARAM["api"]:
+
+                # Remove last dot in domain name (if any)
+                if query_str.endswith('.'):
+                    query_str = query_str[:-1]
+
+                api_data['query_str'] = query_str
+                api_data['query_type'] = query_type
+                api_data['record_type'] = dns_record_type
+#                api_data['dns_reply'] = reply.pack()
+                API.send(API_URL, api_data)
+
+                if CFG_PARAM["debug"]:
+                    print(f"API_DATA FULL: {api_data}")
+
+            if CFG_PARAM["debug"]:
                 print(f"query_name: {query_name} | query_str: {query_str} | query_type: {query_type} | dns_record_type: {dns_record_type}\n")
-
-                print(f"DNS reply: {reply}\n")
+                print(f"DNS reply:\n{reply}\n")
                 print("------------------------------------------------------------------------------------------------------")
 
             return reply.pack()
@@ -97,9 +100,20 @@ class BaseRequestHandler(socketserver.BaseRequestHandler):
         """ Do all work required to service a request. """
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
         print(f"{self.__class__.__name__[:3]} request {now} ({self.client_address[0]} {self.client_address[1]})")
+
+        if CFG_PARAM["api"]:
+            api_data = {
+                'from_host_generic_ip': self.client_address[0],
+                'from_port': self.client_address[1],
+                'dns': self.__class__.__name__[:3]
+            }
+            print("API DATA:", api_data)
+        else:
+            api_data = None
+
         try:
             data = self.get_data()
-            self.send_data(self.response(data))
+            self.send_data(self.response(data, api_data))
         except Exception:
             pass
 
