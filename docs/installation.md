@@ -36,8 +36,11 @@ Download and install [Git](https://git-scm.com/download/win) (only neccessary if
 External guide, if needed: [Install Python according to guide](https://www.howtogeek.com/197947/how-to-install-python-on-windows/).
 
 **IMPORTANT:** During testing it has shown that installing both have worked differently.
+
 If running the program `python3 main.py` fails, try `python main.py`.
+
 If this also fails, install the other Python that you might not have installed (depends on which Python you installed; Microsoft store or executable).
+
 _During testing, this worked:_ Install executable according to guide above (`python3 main.py` did not return any commands), and installing Microsoft store version after.
 
 ### Installing tfcctrl
