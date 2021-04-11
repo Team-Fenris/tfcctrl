@@ -2,6 +2,10 @@ from modules.config import Config
 import json
 import requests
 
+# Constants
+CONFIG=Config()
+CFG_PARAM=CONFIG.params.getProperty("api")
+
 class FenrisApi:
     """ Base class for Fenris API. """
     def __init__(self):
@@ -25,6 +29,8 @@ class FenrisApi:
     def send(self, url, data):
         """ Send to API class. """
         if self._is_json(data):
-            requests.post(url, headers=self.api_headers, json=data)
+            req_callback = requests.post(url, headers=self.api_headers, json=data)
+            if CFG_PARAM["debug"]:
+                print("API CALLBACK:", req_callback)
         else:
             print("FenrisAPI Error: Not a JSON string.")

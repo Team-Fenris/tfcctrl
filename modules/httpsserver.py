@@ -22,8 +22,14 @@ class RequestHandlerHTTPS(BaseHTTPRequestHandler):
     """
     def generateAndSendAPIData(self):
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
-        https_data = {
-            "host_generic_ip": self.headers.get('Host'),
+        # Hack for fixing request issue for localhost
+        if self.headers.get('Host') == 'localhost':
+            host_generic_ip = '127.0.0.1'
+        else:
+            host_generic_ip = self.headers.get('Host')
+            
+        api_data = {
+            "host_generic_ip": host_generic_ip,
             "user_agent": self.headers.get('User-Agent'),
             "accept": self.headers.get('Accept'),
             "accept_language": self.headers.get('Accept-Language'),
@@ -35,7 +41,9 @@ class RequestHandlerHTTPS(BaseHTTPRequestHandler):
             "request_timestamp": now
         }
 
-        API.send(API_URL, https_data)
+        API.send(API_URL, api_data)
+        if CFG_PARAM["debug"]:
+            print("HTTPS API DATA:", api_data)
 
     def do_GET(self):
         self.send_response(200)
