@@ -1,7 +1,7 @@
 # Testing methods
 
 
-1. Run `python3 main.py` to run the program.
+1. Run `python3 main.py` to run the program. In some cases you must instead run `python main.py`.
 
 This will start a local HTTP-, HTTPS- and DNS-server.
 
