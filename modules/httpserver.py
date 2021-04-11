@@ -21,6 +21,9 @@ class RequestHandlerHTTP(BaseHTTPRequestHandler):
     def generateAndSendAPIData(self):
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
         # Hack for fixing request issue for localhost
+        # DISCLAIMER: If the machine resolves to a FQDN, and a FQDN is
+        # requested and resolves to the machine, this will fail and return the FQDN.
+        # As of now, this will give errors inserting data into the API DB.
         if self.headers.get('Host') == 'localhost':
             host_generic_ip = '127.0.0.1'
         else:
