@@ -12,3 +12,5 @@ The Pcap capture will also start. A Pcap file will be generated with a timestamp
 In this file you can also deactivate the *api* parameter, which will not run any requests to an external API.
 
 The IP addresses set in the file is dummy IP addresses, which you will need to change to the Django API server.
+
+The data to the external API will be sent almost realtime, except Pcap data, which will be sent when canceling the run of the program.
