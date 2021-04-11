@@ -4,14 +4,14 @@ api:
   api: True
 
 httpserver:
-  api_url: 'http://192.168.50.222:8000/api/http/'
+  api_url: 'http://<Django API IP>:8000/api/http/'
   listener_ip: 0.0.0.0
   listener_port: 80
   debug: True
   api: True
 
 httpsserver:
-  api_url: 'http://192.168.50.222:8000/api/https/'
+  api_url: 'http://<Django API IP>:8000/api/https/'
   listener_ip: 0.0.0.0
   listener_port: 443
   debug: True
@@ -19,16 +19,16 @@ httpsserver:
   crt_file: 'localhost.pem'
 
 pcap:
-  api_url: 'http://192.168.50.222:8000/api/pcap/'
+  api_url: 'http://<Django API IP>:8000/api/pcap/'
   api: True
   print_pcap: True
   print_payload: True
   debug: True
 
 dnsserver:
-  api_url: 'http://192.168.50.222:8000/api/dns/'
+  api_url: 'http://<Django API IP}:8000/api/dns/'
   listener_ip: 0.0.0.0
   listener_port: 53
-  return_ip: 192.168.50.64
+  return_ip: <your IP address>
   debug: True
   api: True
