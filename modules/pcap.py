@@ -193,7 +193,7 @@ class Pcap:
 
         # Set default values
         self.pid = 0
-        self.process_name = ''
+        self.process_name = None
 
         # Check if the protocol is TCP or UDP and if the source port and destionation port is set
         if (self.proto == 'tcp' or self.proto == 'udp') and packet.src_port and packet.dst_port:
