@@ -6,7 +6,6 @@ type: software
 authors:
   - given-names: Ørjan
     family-names: Jacobsen
-    name-particle: Alexander
   - given-names: Dan
     family-names: Solberg
   - given-names: Pål
