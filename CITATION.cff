@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+date-released: 2021-04-15
+title: FenrisBox
+message: Please cite this software using these metadata.
+type: software
+authors:
+  - given-names: Ørjan
+    family-names: Jacobsen
+    name-particle: Alexander
+  - given-names: Dan
+    family-names: Solberg
+  - given-names: Pål
+    family-names: Larssen
+  - given-names: Ragnhild
+    family-names: Sageng
+  - given-names: Georg
+    family-names: Wedel
+repository-code: 'https://github.com/Team-Fenris/tfcctrl'
+url: 'https://github.com/Team-Fenris'
+abstract: >-
+  Network simulation tool (fakenet) for use in
+  dynamic malware analysis in Windows, using HTTP(S)
+  and DNS listeners. Capability of transmitting
+  gathered packet captures to external endpoint. 
+keywords:
+  - packet-capture-and-analysis
+  - pcap
+license: Apache-2.0
